@@ -22,7 +22,7 @@ import Toast from 'primevue/toast';
 import ToastService from 'primevue/toastservice';
 import DynamicDialog from'primevue/dynamicdialog';
 import DialogService from 'primevue/dialogservice';
-
+import moment from 'moment'
 
 import pt from "./locales/pt.json";
 
@@ -58,6 +58,8 @@ app.component('ProgressSpinner',ProgressSpinner);
 app.component('Toast',Toast);
 app.component('DynamicDialog',DynamicDialog);
 
+
+moment.locale('pt-br');
 
 
 app.mount('#app')

@@ -1,4 +1,5 @@
 export default interface Logs {
+    id:number,
     integrationId: number,
     originId: number,
     originName: string,
@@ -9,6 +10,7 @@ export default interface Logs {
     msgResponse: string,
     status: string,
     date: Date,
+    time: string,
     favorite : string
     visible: string,
     requestMethod: string,

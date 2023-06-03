@@ -5,7 +5,7 @@ const http = axios.create({
 })
 
 export default{
-    findLogs(){
-        return http.get('all')
+    findLogs(filterLog : any){
+        return http.post('all',filterLog)
     }
 }
