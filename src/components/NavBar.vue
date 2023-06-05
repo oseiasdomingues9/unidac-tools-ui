@@ -16,9 +16,12 @@ const items = ref([
 </script>
 
 <template>
-    <Menubar :model="items">
+    <Menubar :model="items" class="bg-blue-600 border-noround border-none">
         <template #start>
-            <img alt="Logos Logs" src="/images/logo.svg" height="40" class="mr-2" />
+            <div class="logo">
+                <v-icon name="bi-tools" scale="2.5" fill="var(--yellow-200)"/>                
+                <span class="ml-1 text-5xl text-bluegray-200">Unidac Tools</span>
+            </div>
         </template>
     </Menubar>
     <router-view></router-view>
@@ -26,6 +29,15 @@ const items = ref([
 
 
 
-<style scoped>
+
+<style scoped lang="scss">
+
+.logo{
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    display: flex;
+    align-items: center;
+}
+
+
 
 </style>
