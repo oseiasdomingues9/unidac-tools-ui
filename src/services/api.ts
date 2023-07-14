@@ -1,11 +1,7 @@
 import axios from "axios"
 
-const http = axios.create({
-   baseURL: 'http://localhost:8080/api/logs'
+const Api = axios.create({
+   baseURL: 'http://localhost:8080/api'
 })
 
-export default{
-    findLogs(filterLog : any){
-        return http.post('all',filterLog)
-    }
-}
+export default Api

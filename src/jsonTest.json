@@ -1,0 +1,56 @@
+{
+	"d": {
+		"results": [
+			{
+				"__metadata": {
+					"id": "https://s4hana:44381/sap/opu/odata/sap/API_MATERIAL_STOCK_SRV/A_MatlStkInAcctMod(Material='600723',Plant='1064',StorageLocation='D000',Batch='21080707',Supplier='',Customer='',WBSElementInternalID='000000000000000000000000',SDDocument='',SDDocumentItem='0',InventorySpecialStockType='',InventoryStockType='01')",
+					"uri": "https://s4hana:44381/sap/opu/odata/sap/API_MATERIAL_STOCK_SRV/A_MatlStkInAcctMod(Material='600723',Plant='1064',StorageLocation='D000',Batch='21080707',Supplier='',Customer='',WBSElementInternalID='000000000000000000000000',SDDocument='',SDDocumentItem='0',InventorySpecialStockType='',InventoryStockType='01')",
+					"type": "API_MATERIAL_STOCK_SRV.A_MatlStkInAcctModType"
+				},
+				"Material": "600723",
+				"Plant": "1064",
+				"StorageLocation": "D000",
+				"Batch": "21080707",
+				"Supplier": "",
+				"Customer": "",
+				"WBSElementInternalID": "000000000000000000000000",
+				"SDDocument": "",
+				"SDDocumentItem": "0",
+				"InventorySpecialStockType": "",
+				"InventoryStockType": "01",
+				"MaterialBaseUnit": "AMP",
+				"MatlWrhsStkQtyInMatlBaseUnit": "5",
+				"to_MaterialStock": {
+					"__deferred": {
+						"uri": "https://s4hana:44381/sap/opu/odata/sap/API_MATERIAL_STOCK_SRV/A_MatlStkInAcctMod(Material='600723',Plant='1064',StorageLocation='D000',Batch='21080707',Supplier='',Customer='',WBSElementInternalID='000000000000000000000000',SDDocument='',SDDocumentItem='0',InventorySpecialStockType='',InventoryStockType='01')/to_MaterialStock"
+					}
+				}
+			},
+			{
+				"__metadata": {
+					"id": "https://s4hana:44381/sap/opu/odata/sap/API_MATERIAL_STOCK_SRV/A_MatlStkInAcctMod(Material='600723',Plant='1064',StorageLocation='D000',Batch='21080708',Supplier='',Customer='',WBSElementInternalID='000000000000000000000000',SDDocument='',SDDocumentItem='0',InventorySpecialStockType='',InventoryStockType='01')",
+					"uri": "https://s4hana:44381/sap/opu/odata/sap/API_MATERIAL_STOCK_SRV/A_MatlStkInAcctMod(Material='600723',Plant='1064',StorageLocation='D000',Batch='21080708',Supplier='',Customer='',WBSElementInternalID='000000000000000000000000',SDDocument='',SDDocumentItem='0',InventorySpecialStockType='',InventoryStockType='01')",
+					"type": "API_MATERIAL_STOCK_SRV.A_MatlStkInAcctModType"
+				},
+				"Material": "600723",
+				"Plant": "1064",
+				"StorageLocation": "D000",
+				"Batch": "21080708",
+				"Supplier": "",
+				"Customer": "",
+				"WBSElementInternalID": "000000000000000000000000",
+				"SDDocument": "",
+				"SDDocumentItem": "0",
+				"InventorySpecialStockType": "",
+				"InventoryStockType": "01",
+				"MaterialBaseUnit": "AMP",
+				"MatlWrhsStkQtyInMatlBaseUnit": "6",
+				"to_MaterialStock": {
+					"__deferred": {
+						"uri": "https://s4hana:44381/sap/opu/odata/sap/API_MATERIAL_STOCK_SRV/A_MatlStkInAcctMod(Material='600723',Plant='1064',StorageLocation='D000',Batch='21080708',Supplier='',Customer='',WBSElementInternalID='000000000000000000000000',SDDocument='',SDDocumentItem='0',InventorySpecialStockType='',InventoryStockType='01')/to_MaterialStock"
+					}
+				}
+			}
+		]
+	}
+}
