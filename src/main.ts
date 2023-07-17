@@ -20,11 +20,12 @@ const app = createApp(App);
 app.use(PrimeVue,{
     locale : pt
 });
+
 app.use(router)
+app.use(keycloak);
 app.use(primevue);
 app.use(highlight);
 app.use(icons);
-app.use(keycloak);
 
 app.mount('#app')
 

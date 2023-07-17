@@ -1,4 +1,4 @@
-<script setup lang="ts">import { reactive, ref } from 'vue';
+<script setup lang="ts">import { inject, reactive, ref } from 'vue';
 import { useDialog } from 'primevue/usedialog';
 import LogsRequestResponse from './LogsRequestResponse.vue';
 import { AxiosError } from 'axios';
@@ -6,6 +6,7 @@ import LogsServices from '../../services/LogService';
 import Logs from '../../models/Logs';
 import { FilterMatchMode, FilterOperator } from 'primevue/api';
 import moment from 'moment';
+import ConfigLogs from '../../models/ConfigLogs';
 
 const filters = ref();
 let logs = reactive<Logs[]>([]);
@@ -15,10 +16,10 @@ const size = ref(25)
 const isLoading = ref(true)
 
 const props = defineProps<{
-    configValue: any,
+    configLogs: ConfigLogs,
 }>();
 
-console.log(props)
+const configLogs : ConfigLogs = props.configLogs;
 
 //Rest
 function searchLogByFilter(filterLog : any){
@@ -136,9 +137,8 @@ const items = ref([
 ]);
 
 function lastError(){
-    //filters.value.status.constraints[0].value = "E"
+    filters.value.status.constraints[0].value = "E"
     console.log("lastError")
-    console.log(props)
 }
 
 function last3Days(){
@@ -229,7 +229,7 @@ const statuses = ref(['S', 'E']);
             </template>
             <template #empty> Nenhum registro foi encontrado. </template>
             <template #loading> Carregando dados os logs. Por favor, aguarde. </template>
-            <Column field="integrationId" header="Integração" filterField="integrationId" dataType="numeric" class="text-center vertical-align-middle" sortable :hidden="hidden">
+            <Column field="integrationId" header="Integração" filterField="integrationId" dataType="numeric" class="text-center vertical-align-middle" sortable :hidden="!configLogs.integrationId">
                 <template #body="{ data }">
                     {{ data.integrationId }}
                 </template>
@@ -237,7 +237,7 @@ const statuses = ref(['S', 'E']);
                     <InputText v-model="filterModel.value" type="number" class="p-column-filter" placeholder="Search by name" />
                 </template>
             </Column>
-            <Column field="originId" header="Origem" filterField="integrationId" dataType="numeric" class="text-center vertical-align-middle" sortable>
+            <Column field="originId" header="Origem" filterField="integrationId" dataType="numeric" class="text-center vertical-align-middle" sortable :hidden="!configLogs.originId">
                 <template #body="{ data }">
                     {{ data.originId }}
                 </template>
@@ -245,7 +245,7 @@ const statuses = ref(['S', 'E']);
                     <InputText v-model="filterModel.value" type="number" class="p-column-filter" placeholder="Search by name" />
                 </template>
             </Column>
-            <Column field="originName" header="Tipo de Origem" filterField="originName" dataType="text" class="text-center vertical-align-middle">
+            <Column field="originName" header="Tipo de Origem" filterField="originName" dataType="text" class="text-center vertical-align-middle" :hidden="!configLogs.originName">
                 <template #body="{ data }">
                     {{ data.originName }}
                 </template>
@@ -261,7 +261,7 @@ const statuses = ref(['S', 'E']);
                     <InputText v-model="filterModel.value" type="text" class="p-column-filter" placeholder="Search by name" />
                 </template>
             </Column>
-            <Column field="message" header="Mensagem" class="text-center vertical-align-middle"></Column>
+            <Column field="message" header="Mensagem" class="text-center vertical-align-middle" :hidden="!configLogs.message"></Column>
             <Column field="date" header="Data" filterField="date" dataType="date" class="text-center vertical-align-middle" sortable> 
                 <template #body="{ data }">
                     {{ moment(data.date).format("DD/MM/YYYY") }}
@@ -273,7 +273,7 @@ const statuses = ref(['S', 'E']);
                     <Button label="Aplicar" @click="doFilterByDate(value)"></Button>
                 </template>
             </Column>
-            <Column field="time" header="Hora" filterField="time" dataType="text" class="text-center vertical-align-middle" sortable> 
+            <Column field="time" header="Hora" filterField="time" dataType="text" class="text-center vertical-align-middle" sortable :hidden="!configLogs.time"> 
                 <template #body="{ data }">
                     {{ data.time }}
                 </template>

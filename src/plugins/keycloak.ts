@@ -17,8 +17,9 @@ export const keycloak = {
                 realm: 'unidac-tools'
             },
             onReady (keycloak: Keycloak) {
-                console.log('Keycloak ready', keycloak)
-                app.provide('keycloak', keycloak)
+                app.config.globalProperties.$keycloak = keycloak;
+                localStorage.setItem('keycloak-token', keycloak.token ?? '')
+                localStorage.setItem('keycloak-user', keycloak?.idTokenParsed?.preferred_username)
             } 
         })
     }

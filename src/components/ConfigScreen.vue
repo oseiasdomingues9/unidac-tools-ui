@@ -1,94 +1,66 @@
 <script setup lang="ts">
-import { inject, reactive, ref } from 'vue';
-import ConfigService from '../services/ConfigService';
-import VueKeycloakJs from '@dsb-norge/vue-keycloak-js'
+import { inject } from 'vue';
 import ConfigLogs from '../models/ConfigLogs';
 
-
-
-const configs = reactive<ConfigLogs>({
-   integrationId: false,
-   originId: false,
-   originName: false,
-   message: false,
-   time: false,
-   requestMethod: false,
-   contentType: false,
-   debugMode: false
-});
-
-
-function teste(){
-   ConfigService.findConfig().then((res : any) =>{
-         configs.integrationId = res.data[0].integrationId;
-         configs.originId = res.data[0].originId;
-   });
-}
-
-function check(event : any){
-   console.log(configs.integrationId)
-}
-
-const symbol = VueKeycloakJs.KeycloakSymbol
-const kc : any = inject(symbol)
-
-console.log(kc)
-
 const dialogRef : any = inject('dialogRef');
+const configLogs: ConfigLogs = dialogRef.value.data.configLogs
 
-function returnData(){
-   dialogRef.value.close("Lere goyyyyyy")
+function saveConfigLog(){
+   dialogRef.value.close(configLogs)
 }
 
-teste();
+function changeTab(){
+   console.log("Change Tab")
+}
+
 </script>
 
 <template>
-<TabView @tab-change="teste">
+<TabView @tab-change="changeTab">
    <TabPanel header="Logs">
       <div>
          <div class="grid">
             <div class="col flex justify-content-between justify-content-center pr-3">
                <span>Código de Integração</span>
-               <InputSwitch v-model="configs.integrationId"/>
+               <InputSwitch v-model="configLogs.integrationId"/>
             </div>
             <div class="col flex justify-content-between justify-content-center pl-3">
                <span>Código de Origem</span>
-               <InputSwitch v-model="configs.originId"/>
+               <InputSwitch v-model="configLogs.originId"/>
             </div>
          </div>
          <div class="grid">
             <div class="col flex justify-content-between justify-content-center pr-3">
                <span>Descrição da Origem</span>
-               <InputSwitch v-model="configs.originName"/>
+               <InputSwitch v-model="configLogs.originName"/>
             </div>
             <div class="col flex justify-content-between justify-content-center pl-3">
                <span>Mensagem</span>
-               <InputSwitch v-model="configs.message"/>
+               <InputSwitch v-model="configLogs.message"/>
             </div>
          </div>
          <div class="grid">
             <div class="col flex justify-content-between justify-content-center pr-3">
                <span>Hora</span>
-               <InputSwitch v-model="configs.time"/>
+               <InputSwitch v-model="configLogs.time"/>
             </div>
             <div class="col flex justify-content-between justify-content-center pl-3">
                <span>Tipo de Requisição</span>
-               <InputSwitch v-model="configs.requestMethod"/>
+               <InputSwitch v-model="configLogs.requestMethod"/>
             </div>
          </div>
          <div class="grid">
             <div class="col flex justify-content-between justify-content-center pr-3">
                <span>Formato da Requisição</span>
-               <InputSwitch v-model="configs.contentType"/>
+               <InputSwitch v-model="configLogs.contentType"/>
             </div>
             <div class="col flex justify-content-between justify-content-center pl-3">
                <span>Modo Debug</span>
-               <InputSwitch v-model="configs.debugMode"/>
+               <InputSwitch v-model="configLogs.debugMode"/>
             </div>
          </div>
          <div class="flex justify-content-center ">
-            <Button label="Salvar" @click="returnData"/>               
+            <Button label="Salvar" @click="saveConfigLog"/>               
          </div>
       </div>
    </TabPanel>

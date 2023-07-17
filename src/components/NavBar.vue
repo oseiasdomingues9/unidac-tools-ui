@@ -1,10 +1,18 @@
 <script setup lang="ts">
 import VueKeycloakJs from '@dsb-norge/vue-keycloak-js';
 import { useDialog } from 'primevue/usedialog';
-import { inject, ref } from 'vue';
+import { inject, onMounted, reactive, ref } from 'vue';
 import ConfigScreen from './ConfigScreen.vue';
+import ConfigLogs from '../models/ConfigLogs';
+import ConfigService from '../services/ConfigService';
+
 
 const dialog = useDialog();
+
+const kc : any = inject(VueKeycloakJs.KeycloakSymbol)
+
+const username = localStorage.getItem('keycloak-user')
+console.log(localStorage.getItem('keycloak-token'))
 
 const items = ref([
     {
@@ -26,10 +34,38 @@ const items2 = ref([
 ]);
 
 function showMenu(event : any){
+    console.log(kc.fullName)
+    console.log(kc.tokenParsed.email)
+
     menu.value.toggle(event);
 }
 
-const configValue = ref();
+let configLogs = reactive<ConfigLogs>({
+    integrationId: false,
+    originId: false,
+    originName: false,
+    message: false,
+    time: false,
+    requestMethod: false,
+    contentType: false,
+    debugMode: false,
+    username: ''
+});
+
+function teste(){ 
+   ConfigService.findByUsername(username).then((res : any) =>{
+      configLogs.integrationId = res.data.integrationId;
+      configLogs.originId = res.data.originId;
+      configLogs.originName = res.data.originName,
+      configLogs.message = res.data.message,
+      configLogs.time = res.data.time,
+      configLogs.requestMethod = res.data.requestMethod,
+      configLogs.contentType = res.data.contentType,
+      configLogs.debugMode = res.data.debugMode
+   });
+}
+
+teste();
 
 function openDialog(){
     dialog.open(ConfigScreen, {
@@ -42,16 +78,24 @@ function openDialog(){
                 '960px': '75vw',
                 '640px': '90vw'
             },
-            modal: true
+            modal: true,
+        },
+        data:{
+            configLogs : configLogs
         },
         onClose(options : any) {
-            configValue.value = options.data; // {id: 12}
+            Object.assign(configLogs,options.data)
+            configLogs.username = username
+            ConfigService.saveConfigLogs(configLogs).then((res : any)=> {
+                console.log(res)
+            })
         }
     });
 }
 
-const symbol = VueKeycloakJs.KeycloakSymbol
-const kc : any = inject(symbol)
+
+
+
 
 function logout(){
     kc.keycloak.logout()
@@ -68,13 +112,19 @@ function logout(){
             </div>
         </template>
         <template #end>
-            <div>
-                <Button icon="pi pi-cog" raised rounded @click="showMenu"></Button>
-                <Menu ref="menu" id="overlay_menu" :model="items2" :popup="true" />
+            <div class="flex">
+                <div class="flex align-items-center justify-content-center flex-column p-1 mr-2 border-round-md">
+                    <span class="text-xg mb-1">{{ kc.fullName }}</span>
+                    <span>{{ kc.tokenParsed.email }}</span>
+                </div>
+                <div>
+                    <Button icon="pi pi-cog" raised rounded @click="showMenu"></Button>
+                    <Menu ref="menu" id="overlay_menu" :model="items2" :popup="true" />
+                </div>
             </div>
         </template>
     </Menubar>
-    <router-view :configValue="configValue"></router-view>
+    <router-view :configLogs="configLogs"></router-view>
 </template>
 
 <style scoped lang="scss">
