@@ -42,8 +42,10 @@ function showMenu(event : any){
 
 let configLogs = reactive<ConfigLogs>({
     integrationId: false,
-    originId: false,
-    originName: false,
+    refId1: false,
+    refName1: false,
+    refId2: false,
+    refName2: false,
     message: false,
     time: false,
     requestMethod: false,
@@ -55,14 +57,17 @@ let configLogs = reactive<ConfigLogs>({
 function teste(){ 
    ConfigService.findByUsername(username).then((res : any) =>{
       configLogs.integrationId = res.data.integrationId;
-      configLogs.originId = res.data.originId;
-      configLogs.originName = res.data.originName,
+      configLogs.refId1 = res.data.refId1;
+      configLogs.refName1 = res.data.refName1;
+      configLogs.refId2 = res.data.refId2;
+      configLogs.refName2 = res.data.refName2;
       configLogs.message = res.data.message,
       configLogs.time = res.data.time,
       configLogs.requestMethod = res.data.requestMethod,
       configLogs.contentType = res.data.contentType,
       configLogs.debugMode = res.data.debugMode
-   });
+      console.log(configLogs)
+   })
 }
 
 teste();
@@ -115,7 +120,6 @@ function logout(){
             <div class="flex">
                 <div class="flex align-items-center justify-content-center flex-column p-1 mr-2 border-round-md">
                     <span class="text-xg mb-1">{{ kc.fullName }}</span>
-                    <span>{{ kc.tokenParsed.email }}</span>
                 </div>
                 <div>
                     <Button icon="pi pi-cog" raised rounded @click="showMenu"></Button>

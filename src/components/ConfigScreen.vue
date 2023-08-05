@@ -25,14 +25,24 @@ function changeTab(){
                <InputSwitch v-model="configLogs.integrationId"/>
             </div>
             <div class="col flex justify-content-between justify-content-center pl-3">
-               <span>Código de Origem</span>
-               <InputSwitch v-model="configLogs.originId"/>
+               <span>Código de Referência 01</span>
+               <InputSwitch v-model="configLogs.refId1"/>
             </div>
          </div>
          <div class="grid">
             <div class="col flex justify-content-between justify-content-center pr-3">
-               <span>Descrição da Origem</span>
-               <InputSwitch v-model="configLogs.originName"/>
+               <span>Descrição da Referência 01</span>
+               <InputSwitch v-model="configLogs.refName1"/>
+            </div>
+            <div class="col flex justify-content-between justify-content-center pl-3">
+               <span>Código de Referência 02</span>
+               <InputSwitch v-model="configLogs.refId2"/>
+            </div>
+         </div>
+         <div class="grid">
+            <div class="col flex justify-content-between justify-content-center pr-3">
+               <span>Descrição da Referência 02</span>
+               <InputSwitch v-model="configLogs.refName2"/>
             </div>
             <div class="col flex justify-content-between justify-content-center pl-3">
                <span>Mensagem</span>

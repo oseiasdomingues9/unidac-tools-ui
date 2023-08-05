@@ -1,6 +1,8 @@
-<script setup lang="ts">import { inject, reactive, ref } from 'vue';
+<script setup lang="ts">
+import { inject, onMounted, reactive, ref } from 'vue';
 import { useDialog } from 'primevue/usedialog';
 import LogsRequestResponse from './LogsRequestResponse.vue';
+import LogsFilter from './LogsFilter.vue'
 import { AxiosError } from 'axios';
 import LogsServices from '../../services/LogService';
 import Logs from '../../models/Logs';
@@ -12,32 +14,84 @@ const filters = ref();
 let logs = reactive<Logs[]>([]);
 //Paginação
 const dialog = useDialog();
-const size = ref(25)
+const rows = ref(25)
 const isLoading = ref(true)
 
 const props = defineProps<{
     configLogs: ConfigLogs,
 }>();
 
+onMounted(() => {
+    isLoading.value = true;
+    loadLazyData();
+});
+
+const loadLazyData = () => {
+    isLoading.value = true;
+
+    setTimeout(() => {
+        searchLogByFilter(filterLog)
+        console.log("AAAA")
+        setTimeout(() => {
+            isLoading.value = false;
+        },Math.random() * 1000 + 250);
+    }, Math.random() * 1000 + 250);
+};
+
+let sortField = "id";
+let sortOrder = -1;
+
+//Filtro inicial
+let filterLog = reactive({
+    "dateStart" : moment().toDate(),
+    "dateEnd" :  moment().toDate(),
+    "page" : 0,
+    "rows" : rows,
+    "sortField"  : sortField,
+    "sortOrder" : sortOrder
+})
+
+const onPage = (event : any) => {
+    filterLog.page = event.page
+    filterLog.rows = event.rows 
+    filterLog.sortField = sortField
+    filterLog.sortOrder = sortOrder
+    loadLazyData();
+};
+const onSort = (event: any) => {
+    filterLog.page = 0
+    filterLog.rows = rows.value
+
+    sortField = event.sortField
+    filterLog.sortField = sortField
+
+    sortOrder = event.sortOrder
+    filterLog.sortOrder = sortOrder
+    loadLazyData();
+};
+
+
+
 const configLogs : ConfigLogs = props.configLogs;
 
 //Rest
 function searchLogByFilter(filterLog : any){
     LogsServices.findLogs(filterLog).then((res : any) => {
-        Object.assign(logs,res.data)
+        console.log(res)
+
+        Object.assign(logs,res.data.logsDTO)
+        totalRecords.value = res.data.totalRows
         logs.forEach(x => {
             x.date = moment(x.date).toDate()
             x.time = moment(x.time).format("HH:mm:ss")
         })
-        isLoading.value = false;
     }).catch((err : AxiosError) => {
         console.log(err)
         isLoading.value = false;
-
     });
 }
-//Uteis
 
+//Uteis
 const formatDate = (value : any) => {
     return moment(value).format("DD/MM/YYYY")
 };
@@ -47,13 +101,6 @@ const formatDate = (value : any) => {
 function initFilters(){
     filters.value = {
         global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-        integrationId: { operator: FilterOperator.OR, constraints: [{ value: null, matchMode: FilterMatchMode.GREATER_THAN }] },
-        originId: { operator: FilterOperator.OR, constraints: [{ value: null, matchMode: FilterMatchMode.GREATER_THAN }] },
-        originName: { operator: FilterOperator.OR, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }]},
-        integrationName: { operator: FilterOperator.OR, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }]},
-        date: { operator: FilterOperator.OR, constraints: [{ value: moment().toDate(), matchMode: FilterMatchMode.DATE_IS }] },
-        time: { operator: FilterOperator.OR, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
-        status: { operator: FilterOperator.OR, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },
     };
 };
 initFilters();
@@ -61,34 +108,7 @@ initFilters();
 function clearFilter(){
     initFilters();
 };
-//Filtro inicial
-let filterLog = reactive({
-    "operation" : filters.value.date.operator,
-    "match1" :  filters.value.date.constraints[0].matchMode,
-    "matchValue1" : formatDate(filters.value.date.constraints[0].value),
-    "match2" :  '',
-    "matchValue2" : '',
-})
-searchLogByFilter(filterLog);
 
-//Filtro por data
-function doFilterByDate(filterDate : any){
-    isLoading.value = true
-    let filterModel = filterDate.filterModel
-    filterLog.operation =  filterModel.operator
-    filterLog.match1 = filterModel.constraints[0].matchMode
-    console.log(filterModel.constraints[0].value)
-    console.log(formatDate(filterModel.constraints[0].value))
-    filterLog.matchValue1 = formatDate(filterModel.constraints[0].value)
-    if(filterModel.constraints.length > 1){
-        if(filterModel.constraints[1].value != null){
-            filterLog.matchValue2 = formatDate(filterModel.constraints[1].value)
-            filterLog.match2 = filterModel.constraints[1].matchMode
-        }
-    }
-    searchLogByFilter(filterLog);
-    filterDate.filterCallback();
-}
 
 //Modal
 function openDialog(logs: Logs){
@@ -111,10 +131,8 @@ function openDialog(logs: Logs){
 }
 
 //Teste
+const totalRecords = ref(0);
 
-function teste(){
-    console.log("Teste")
-}
 
 const menu = ref();
 const items = ref([
@@ -154,31 +172,12 @@ function last30Days(){
 }
 
 function lastByDays(days : number){
-    isLoading.value = true
-
-    filters.value.date.constraints[0].value = moment().subtract(days,'days').toDate()
-    filters.value.date.constraints[0].matchMode = FilterMatchMode.DATE_AFTER
-
-    filters.value.date.constraints.push({
-        "value" : moment().toDate(),
-        "matchMode" : FilterMatchMode.DATE_BEFORE
-    })
-
-    filterLog = {
-        "operation" : filters.value.date.operator,
-        "match1" :  filters.value.date.constraints[0].matchMode,
-        "matchValue1" : formatDate(filters.value.date.constraints[0].value),
-        "match2" :  filters.value.date.constraints[1].matchMode,
-        "matchValue2" : formatDate(filters.value.date.constraints[1].value),
-    }
-    searchLogByFilter(filterLog);
+    console.log(days)
 }
 
 const toggle = (event : any) => {
     menu.value.toggle(event);
 };
-
-const hidden = ref(false)
 
 const getSeverity = (status : any) => {
     switch (status) {
@@ -204,14 +203,33 @@ const getColor = (status : any) => {
     }
 };
 
-const statuses = ref(['S', 'E']);
+
+function testeEvento(){
+    menu.value.hide()
+}
+
+function openFilter(){
+    dialog.open(LogsFilter, {
+        props: {
+            header: 'Filtro',
+            style: {
+                width: '40vw',
+            },
+            breakpoints:{
+                '960px': '75vw',
+                '640px': '90vw'
+            },
+            modal: true
+        }
+    });
+}
 
 </script>
 
 <template>
     <div>
-        <DataTable :value="logs" v-model:filters="filters"  tableStyle="min-width: 50rem" stripedRows paginator :rows="size" :rowsPerPageOptions="[25,50,100]" :loading="isLoading" dataKey="id" filterDisplay="menu" sortField="id" :sort-order="-1"
-        :globalFilterFields="['integrationId', 'originId', 'originName', 'message', 'date','time','status']" >
+        <DataTable :value="logs" v-model:filters="filters" tableStyle="min-width: 50rem" stripedRows paginator :rows="rows" :rowsPerPageOptions="[25,50,100]" :loading="isLoading" dataKey="id" filterDisplay="menu" sortField="id" :sort-order="-1"
+        :globalFilterFields="['integrationId', 'refId1', 'refName1','refId2', 'refName2', 'message', 'date','time','status']" @row-dblclick="openDialog($event.data)" @page="onPage($event)" @sort="onSort($event)" :totalRecords="totalRecords" lazy>
             <template #header>
                 <div class="flex justify-content-between">
                     <Button type="button" icon="pi pi-filter-slash" label="Limpar" outlined @click="clearFilter()" />
@@ -220,86 +238,52 @@ const statuses = ref(['S', 'E']);
                             <i class="pi pi-search" />              
                             <InputText v-model="filters['global'].value" placeholder="Pesquisa..." />
                         </span>
-                        <Button type="button" @click="toggle" aria-haspopup="true" aria-controls="overlay_tmenu"  class="ml-2">
+                        <Button type="button" @mouseenter="toggle" @click="openFilter()" aria-haspopup="true" aria-controls="overlay_tmenu"  class="ml-2" >
                             <v-icon name="co-filter" scale="1" fill="var(--primary-200)"/>                
                         </Button>
-                        <TieredMenu ref="menu" id="overlay_tmenu" :model="items" popup />
+                        <TieredMenu ref="menu" id="overlay_tmenu" :model="items" popup @mouseleave="testeEvento()"/>
                     </div>  
                 </div>
             </template>
             <template #empty> Nenhum registro foi encontrado. </template>
-            <template #loading> Carregando dados os logs. Por favor, aguarde. </template>
+            <template #loading> Carregando dados os logs. Por favor, aguarde... </template>
             <Column field="integrationId" header="Integração" filterField="integrationId" dataType="numeric" class="text-center vertical-align-middle" sortable :hidden="!configLogs.integrationId">
                 <template #body="{ data }">
                     {{ data.integrationId }}
                 </template>
-                <template #filter="{ filterModel }">
-                    <InputText v-model="filterModel.value" type="number" class="p-column-filter" placeholder="Search by name" />
-                </template>
             </Column>
-            <Column field="originId" header="Origem" filterField="integrationId" dataType="numeric" class="text-center vertical-align-middle" sortable :hidden="!configLogs.originId">
+            <Column field="refId1" :header="!configLogs.refId2 ? 'Referência' : 'Referência 01'" filterField="refId1" dataType="numeric" class="text-center vertical-align-middle" sortable :hidden="!configLogs.refId1">
                 <template #body="{ data }">
-                    {{ data.originId }}
-                </template>
-                <template #filter="{ filterModel }">
-                    <InputText v-model="filterModel.value" type="number" class="p-column-filter" placeholder="Search by name" />
+                    <span v-if="configLogs.refName1" style="font-size: 12px;">{{ data.refName1 }}<br/></span>
+                    <span>{{ data.refId1 }}</span>
                 </template>
             </Column>
-            <Column field="originName" header="Tipo de Origem" filterField="originName" dataType="text" class="text-center vertical-align-middle" :hidden="!configLogs.originName">
+            <Column field="refId2" header="Referência 02" filterField="refId2" dataType="numeric" class="text-center vertical-align-middle" sortable :hidden="!configLogs.refId2">
                 <template #body="{ data }">
-                    {{ data.originName }}
-                </template>
-                <template #filter="{ filterModel }">
-                    <InputText v-model="filterModel.value" type="text" class="p-column-filter" placeholder="Search by name" />
+                    <span v-if="configLogs.refName2" style="font-size: 12px;">{{ data.refName2 }}<br/></span>
+                    <span>{{ data.refId2 }}</span>
                 </template>
             </Column>
-            <Column field="integrationName" header="Entidade" filterField="integrationName" dataType="text" class="text-center vertical-align-middle">
+            <Column field="integrationName" header="Entidade" filterField="integrationName" dataType="text" class="text-center vertical-align-middle" :showFilterMatchModes="false">
                 <template #body="{ data }">
                     {{ data.integrationName }}
                 </template>
-                <template #filter="{ filterModel }">
-                    <InputText v-model="filterModel.value" type="text" class="p-column-filter" placeholder="Search by name" />
-                </template>
             </Column>
-            <Column field="message" header="Mensagem" class="text-center vertical-align-middle" :hidden="!configLogs.message"></Column>
-            <Column field="date" header="Data" filterField="date" dataType="date" class="text-center vertical-align-middle" sortable> 
+            <Column field="message" header="Mensagem" class="text-center vertical-align-middle" :hidden="!configLogs.message" ></Column>
+            
+            <Column field="date" header="Data" dataType="date" class="text-center vertical-align-middle" sortable :showFilterMenu="false"> 
                 <template #body="{ data }">
                     {{ moment(data.date).format("DD/MM/YYYY") }}
-                </template>
-                <template #filter="{ filterModel }">
-                    <Calendar v-model="filterModel.value" dateFormat="mm/dd/yy" placeholder="mm/dd/yyyy" mask="99/99/9999" />
-                </template>
-                <template #filterapply="value">
-                    <Button label="Aplicar" @click="doFilterByDate(value)"></Button>
                 </template>
             </Column>
             <Column field="time" header="Hora" filterField="time" dataType="text" class="text-center vertical-align-middle" sortable :hidden="!configLogs.time"> 
                 <template #body="{ data }">
                     {{ data.time }}
                 </template>
-                <template #filter="{ filterModel }">
-                    <InputText v-model="filterModel.value" type="text" class="p-column-filter" placeholder="Search by name" />
-                </template>
             </Column>
             <Column field="status" header="Status" class="text-center vertical-align-middle">
                 <template #body="{ data }">
                     <v-icon :name="getSeverity(data.status)" scale="1.2" :fill="getColor(data.status)" />                
-                </template>
-                <template #filter="{ filterModel }">
-                    <Dropdown v-model="filterModel.value" :options="statuses" placeholder="Select One" class="p-column-filter" >
-                        <template #option="slotProps">
-                            <span>{{ slotProps.option == 'S' ? 'Sucesso': 'Erro'}}</span>                        
-                        </template>
-                    </Dropdown>
-                </template>
-            </Column>
-            <Column field="exchange" header="Dados" class="text-center vertical-align-middle">
-                <template #body="col">
-                    <Button @click="openDialog(col.data)" type="button" class="h-2rem w-3rem bg-blue-600 border-none">
-                        <template #icon>
-                            <v-icon name="bi-eye" scale="1" fill="var(--primary-100)"/>                
-                        </template>
-                    </Button>
                 </template>
             </Column>
             <DynamicDialog/>
@@ -324,4 +308,4 @@ const statuses = ref(['S', 'E']);
     background: rgba(255, 255, 255, 0.15);;    
 }
 
-</style>../../services/API
+</style>

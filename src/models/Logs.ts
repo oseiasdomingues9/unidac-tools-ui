@@ -1,9 +1,11 @@
 export default interface Logs {
     id:number,
     integrationId: number,
-    originId: number,
-    originName: string,
     integrationName: string,
+    refId1: number,
+    refName1: string,
+    refId2: number,
+    refName2: string,
     message: string,
     url: string,
     msgRequest: string,
