@@ -26,6 +26,7 @@ import Tag from 'primevue/tag';
 import TieredMenu from 'primevue/tieredmenu';
 import Toast from 'primevue/toast';
 import Toolbar from 'primevue/toolbar';
+import Checkbox  from 'primevue/checkbox';
 
 import DialogService from 'primevue/dialogservice';
 import ToastService from 'primevue/toastservice';
@@ -55,6 +56,7 @@ export const primevue = {
     app.component('Tag',Tag);
     app.component('Menu',Menu);
     app.component('InputSwitch',InputSwitch);
+    app.component('Checkbox',Checkbox);
 
     app.use(ToastService)
     app.use(DialogService);}

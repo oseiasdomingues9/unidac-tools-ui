@@ -1,14 +1,15 @@
 <script setup lang="ts">
-import { inject, onMounted, reactive, ref } from 'vue';
+import { onMounted, reactive, ref } from 'vue';
 import { useDialog } from 'primevue/usedialog';
-import LogsRequestResponse from './LogsRequestResponse.vue';
-import LogsFilter from './LogsFilter.vue'
 import { AxiosError } from 'axios';
-import LogsServices from '../../services/LogService';
-import Logs from '../../models/Logs';
-import { FilterMatchMode, FilterOperator } from 'primevue/api';
+import { FilterMatchMode } from 'primevue/api';
 import moment from 'moment';
-import ConfigLogs from '../../models/ConfigLogs';
+import ConfigLogs from '../models/ConfigLogs';
+import ConfigService from '../services/ConfigService';
+import Logs from '../models/Logs';
+import LogsServices from '../services/LogService';
+import LogsRequestResponse from "../components/logs/LogsRequestResponse.vue";
+import LogsFilter from "../components/logs/LogsFilter.vue";
 
 const filters = ref();
 let logs = reactive<Logs[]>([]);
@@ -72,7 +73,28 @@ const onSort = (event: any) => {
 
 
 
-const configLogs : ConfigLogs = props.configLogs;
+let configLogs = reactive<ConfigLogs>({
+    integrationId: false,
+    refId1: false,
+    refName1: false,
+    refId2: false,
+    refName2: false,
+    message: false,
+    time: false,
+    requestMethod: false,
+    contentType: false,
+    debugMode: false,
+    userId: ''
+});
+
+function teste(){
+   ConfigService.findByUserId(localStorage.getItem("user")).then((res : any) =>{
+      Object.assign(configLogs,res.data)
+      configLogs.userId = localStorage.getItem("user")
+   })
+}
+
+teste();
 
 //Rest
 function searchLogByFilter(filterLog : any){

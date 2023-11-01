@@ -1,13 +1,13 @@
-import api from "./API"
+import axios from "./Axios"
 
 let base = "/logs/"
 
 export default{
     findLogs(filterLog : any){
-        return api.post(base + 'all',filterLog)
+        return axios.post(base + 'all',filterLog)
     },
     security(role : any,token : any){
-        return api.get('security/' + role, {
+        return axios.get('security/' + role, {
             headers: { 
                 Authorization: "Bearer " + token 
             }}

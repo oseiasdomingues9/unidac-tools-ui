@@ -5,7 +5,6 @@ import './style.css'
 import { primevue } from './plugins/primevue'
 import { highlight } from './plugins/highlight'
 import { icons } from './plugins/icons'
-import { keycloak } from './plugins/keycloak'
 
 import pt from "./locales/pt.json";
 
@@ -22,10 +21,11 @@ app.use(PrimeVue,{
 });
 
 app.use(router)
-app.use(keycloak);
 app.use(primevue);
 app.use(highlight);
 app.use(icons);
+
+
 
 app.mount('#app')
 

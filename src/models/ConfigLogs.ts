@@ -9,5 +9,5 @@ export default interface ConfigLogs {
     requestMethod: boolean,
     contentType: boolean,
     debugMode: boolean,
-    username : string | null
+    userId : string | null
 }

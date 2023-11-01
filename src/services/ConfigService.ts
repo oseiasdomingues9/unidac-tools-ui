@@ -1,14 +1,13 @@
-import { keycloak } from './../plugins/keycloak';
 import ConfigLogs from "../models/ConfigLogs"
-import api from "./API"
+import axios from "./Axios"
 
 let base = "/config/"
 
 export default{
-    findByUsername(username : any){
-        return api.get(base + 'logs/find-by-username/' + username)
+    findByUserId(userId : any){
+        return axios.get(base + 'logs/find-by-id/' + userId)
     },
     saveConfigLogs(configLogs : ConfigLogs){
-        return api.post(base + 'logs/save',configLogs)
+        return axios.post(base + 'logs/save',configLogs)
     }
 }
