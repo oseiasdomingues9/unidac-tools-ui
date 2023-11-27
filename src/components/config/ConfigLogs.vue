@@ -20,95 +20,95 @@ let configLogs = reactive<ConfigLogs>({
 
 function teste(){ 
    ConfigService.findByUserId(localStorage.getItem("user")).then((res : any) =>{
-      configLogs.integrationId = res.data.integrationId;
-      configLogs.refId1 = res.data.refId1;
-      configLogs.refName1 = res.data.refName1;
-      configLogs.refId2 = res.data.refId2;
-      configLogs.refName2 = res.data.refName2;
-      configLogs.message = res.data.message,
-      configLogs.time = res.data.time,
-      configLogs.requestMethod = res.data.requestMethod,
-      configLogs.contentType = res.data.contentType,
-      configLogs.debugMode = res.data.debugMode
+        Object.assign(configLogs,res.data)
+
+
+  
       configLogs.userId = localStorage.getItem("user")
    })
 }
 
 teste();
 
+teste
+
 
 function saveConfigLog(){
+    console.log(configLogs.integrationId)
+    console.log(configLogs.refId1)
    ConfigService.saveConfigLogs(configLogs)
                 .then((res : any)=> {
                     console.log(res)
                 })
-            }
+                }
 </script>
 
 <template>
-    <div class="flex justify-content-between align-items-center mb-2">
-        <spacer/>
-        <h1>Configurações dos Logs</h1>
-        <Button icon="pi pi-save" @click="saveConfigLog"  text rounded/>               
-    </div>
-    <div class="flex flex-row">
-        <div class="flex flex-wrap border-1 border-round-md surface-border w-5 mr-3 p-2 justify-content-center">
-            <div class="flex align-items-center w-full justify-content-center p-2">
-                <h3>Campos</h3>
-            </div>
-            <div class="flex flex-column gap-2 p-2">
-                <div class="flex align-items-center">
-                <Checkbox v-model="configLogs.integrationId" inputId="ingredient1" name="pizza" value="Cheese" />
-                <label for="ingredient1" class="ml-2"> Código de Integração </label>
-                </div>
-                <div class="flex align-items-center">
-                <Checkbox v-model="configLogs.refId1" inputId="ingredient1" name="pizza" value="Cheese" />
-                <label for="ingredient1" class="ml-2"> Código de Referência 01 </label>
-                </div>
-                <div class="flex align-items-center">
-                <Checkbox v-model="configLogs.refName2" inputId="ingredient1" name="pizza" value="Cheese" />
-                <label for="ingredient1" class="ml-2"> Descrição da Referência 01  </label>
-                </div>
-                <div class="flex align-items-center">
-                <Checkbox v-model="configLogs.time" inputId="ingredient1" name="pizza" value="Cheese" />
-                <label for="ingredient1" class="ml-2"> Hora </label>
-                </div>
-                <div class="flex align-items-center">
-                <Checkbox v-model="configLogs.requestMethod" inputId="ingredient1" name="pizza" value="Cheese" />
-                <label for="ingredient1" class="ml-2"> Tipo de Requisição </label>
-                </div>
-            </div>
-            <div class="flex flex-column gap-2 p-2">
-                <div class="flex align-items-center">
-                <Checkbox v-model="configLogs.refName1" inputId="ingredient1" name="pizza" value="Cheese" />
-                <label for="ingredient1" class="ml-2"> Descrição da Referência 01 </label>
-                </div>
-                <div class="flex align-items-center">
-                <Checkbox v-model="configLogs.refId2" inputId="ingredient1" name="pizza" value="Cheese" />
-                <label for="ingredient1" class="ml-2"> Código de Referência 02 </label>
-                </div>
-                <div class="flex align-items-center">
-                <Checkbox v-model="configLogs.message" inputId="ingredient1" name="pizza" value="Cheese" />
-                <label for="ingredient1" class="ml-2"> Mensagem </label>
-                </div>
-                <div class="flex align-items-center">
-                <Checkbox v-model="configLogs.contentType" inputId="ingredient1" name="pizza" value="Cheese" />
-                <label for="ingredient1" class="ml-2"> Formato da Requisição </label>
-                </div>
-            </div>
-
+    <div>
+        <div class="flex justify-content-between align-items-center mb-2">
+            <spacer/>
+            <h1>Configurações dos Logs</h1>
+            <Button icon="pi pi-save" @click="saveConfigLog"  text rounded/>               
         </div>
-        <div class="flex flex-wrap border-1 border-round-md surface-border w-7 ml-3 p-2 justify-content-center">
-            <div class="flex flex-column gap-2 p-2 w-5 mr-4">
-                <div class="flex align-items-center justify-content-between">
-                <span>Modo Debug</span>
-                <InputSwitch v-model="configLogs.debugMode"/>
+        <div class="flex flex-row">
+            <div class="flex flex-wrap border-1 border-round-md surface-border w-5 mr-3 p-2 justify-content-center">
+                <div class="flex align-items-center w-full justify-content-center p-2">
+                    <h3>Campos</h3>
                 </div>
+                <div class="flex flex-column gap-2 p-2">
+                    <div class="flex align-items-center">
+                        <Checkbox v-model="configLogs.integrationId" inputId="integrationId" :binary="true"/>
+                        <label for="integrationId" class="ml-2"> Código de Integração </label>
+                    </div>
+                    <div class="flex align-items-center">
+                        <Checkbox v-model="configLogs.refId1" inputId="refId1" :binary="true"/>
+                        <label for="refId1" class="ml-2"> Código de Referência 01 </label>
+                    </div>
+                    <div class="flex align-items-center">
+                        <Checkbox v-model="configLogs.refName2" inputId="ingredient1" name="pizza" value="Cheese" :binary="true"/>
+                        <label for="ingredient1" class="ml-2"> Descrição da Referência 01  </label>
+                    </div>
+                    <div class="flex align-items-center">
+                        <Checkbox v-model="configLogs.time" inputId="ingredient1" name="pizza" value="Cheese" :binary="true"/>
+                        <label for="ingredient1" class="ml-2"> Hora </label>
+                    </div>
+                    <div class="flex align-items-center">
+                        <Checkbox v-model="configLogs.requestMethod" inputId="ingredient1" name="pizza" value="Cheese" :binary="true" />
+                        <label for="ingredient1" class="ml-2"> Tipo de Requisição </label>
+                    </div>
+                </div>
+                <div class="flex flex-column gap-2 p-2">
+                    <div class="flex align-items-center">
+                    <Checkbox v-model="configLogs.refName1" inputId="ingredient1" name="pizza" value="Cheese" :binary="true"/>
+                    <label for="ingredient1" class="ml-2"> Descrição da Referência 01 </label>
+                    </div>
+                    <div class="flex align-items-center">
+                    <Checkbox v-model="configLogs.refId2" inputId="ingredient1" name="pizza" value="Cheese" :binary="true"/>
+                    <label for="ingredient1" class="ml-2"> Código de Referência 02 </label>
+                    </div>
+                    <div class="flex align-items-center">
+                    <Checkbox v-model="configLogs.message" inputId="ingredient1" name="pizza" value="Cheese" :binary="true"/>
+                    <label for="ingredient1" class="ml-2"> Mensagem </label>
+                    </div>
+                    <div class="flex align-items-center">
+                    <Checkbox v-model="configLogs.contentType" inputId="ingredient1" name="pizza" value="Cheese" :binary="true"/>
+                    <label for="ingredient1" class="ml-2"> Formato da Requisição </label>
+                    </div>
+                </div>
+
             </div>
-            <div class="flex flex-column gap-2 p-2 w-5 ml-4">
-                <div class="flex align-items-center justify-content-between">
-                <span>Modo Debug</span>
-                <InputSwitch v-model="configLogs.debugMode"/>
+            <div class="flex flex-wrap border-1 border-round-md surface-border w-7 ml-3 p-2 justify-content-center">
+                <div class="flex flex-column gap-2 p-2 w-5 mr-4">
+                    <div class="flex align-items-center justify-content-between">
+                    <span>Modo Debug</span>
+                    <InputSwitch v-model="configLogs.debugMode"/>
+                    </div>
+                </div>
+                <div class="flex flex-column gap-2 p-2 w-5 ml-4">
+                    <div class="flex align-items-center justify-content-between">
+                    <span>Modo Debug</span>
+                    <InputSwitch v-model="configLogs.debugMode"/>
+                    </div>
                 </div>
             </div>
         </div>

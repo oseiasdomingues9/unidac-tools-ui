@@ -60,8 +60,8 @@ function logout(){
                 </div>
             </div>
         </template>
+        <DynamicDialog/>
     </Menubar>
-    <DynamicDialog/>
 </template>
 
 <style scoped lang="scss">

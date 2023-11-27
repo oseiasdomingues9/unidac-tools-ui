@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import moment from 'moment';
-import { ref } from 'vue';
+import Dialog from 'primevue/dialog';
+import { inject, ref } from 'vue';
 
 
 let date = ref([
@@ -8,9 +9,15 @@ let date = ref([
     moment().toDate()
 ])
 
+const dialogRef : any = inject('dialogRef');
+
 let time = ref([
     
 ])
+
+function close(params : any) {
+    dialogRef.value.close(params);
+}
 
 let timeStart = ref();
 let timeEnd = ref();
@@ -52,6 +59,7 @@ function teste(){
                         <label for="locale-user" class="font-bold block mb-2"> User Locale </label>
                         <InputNumber v-model="value1" inputId="integeronly" class="w-full"/>
                     </div>
+                    <Button @click="close(date)"/>
                 </div>
             </template>
         </Card>

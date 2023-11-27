@@ -231,6 +231,7 @@ function testeEvento(){
 }
 
 function openFilter(){
+    console.log("2")
     dialog.open(LogsFilter, {
         props: {
             header: 'Filtro',
@@ -241,7 +242,13 @@ function openFilter(){
                 '960px': '75vw',
                 '640px': '90vw'
             },
-            modal: true
+            modal: true,
+            closable: false        
+        },
+        onClose(option : any){
+            filterLog.dateStart = option.data[0]
+            filterLog.dateEnd = option.data[1]
+            searchLogByFilter(filterLog)
         }
     });
 }
